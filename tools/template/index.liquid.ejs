@@ -1,0 +1,16 @@
+{% if customer %}
+    <%- include('./index.html') %>
+    <style>
+        <%- include('static/css/main.css') %>
+    </style>
+    <script>
+        <%- include('static/js/main.js') %>
+    </script>
+    {% else %}
+    <div style="text-align: center;">
+        <p>Something went wrong ...</p>
+        <p><a href="/account">Go Back to Account</a></p>
+    </div>
+{% else %}
+    <p>Please Login!</p>
+{% endif %}
