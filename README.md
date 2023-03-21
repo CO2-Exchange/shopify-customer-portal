@@ -7,12 +7,23 @@
 
 To run dev:
 
-Switch mode to dev ( This will utilize mockjson payloads, and modify the app path prefix )
+Switch mode to dev ( This will utilize mockjson payloads, and modify the app path prefix )\
+You wont have to do anything to run in dev mode initially\
+There are 2 boolean variables, one in each file, Subscription.js and App.js. \
+
+Each have devMode = true
+
+This will tell the app to use mockjson files, instead of API requests.\ 
+Dev mode will also swap the pathPrefix to use root paths instead of the required app_proxy prefix paths. 
+
+
+
+
 
 
 yarn 
 
-yarn dev
+yarn start
 
 
 
