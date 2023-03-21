@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import AccountInformation from './AccountInformation.js';
 import ExchangeHistory from './ExchangeHistory.js';
 import MembershipOverview from './MembershipOverview.js';
-import UpdateToast from './UpdateToast.js';
 import { Link, useNavigate } from 'react-router-dom';
+import contractsDetailsMockJson from '../mock-json/subscription-details.json';
 
 
 // Component housing the subscriptions view
 // Responsible for fetching contract details
 // Navigation between contracts
+const devMode = true;
 
 function Subscription(props) {
   const [orders, setOrders] = useState(null);
@@ -18,9 +19,12 @@ function Subscription(props) {
   const [subscriptionProduct, setSubscriptionProduct] = useState("")
   const [subscriptionProductAmount, setProductAmount] = useState(null);
   const navigator = useNavigate()
-  const pathPrefix = "/apps/fillstation/web/subscription/";
+  const pathPrefix = devMode? "/subscription/" : "/apps/fillstation/web/subscription/";
 
   useEffect(() => {
+    if(devMode)
+    assignVariables(contractsDetailsMockJson)
+    else
     fetchOrders(window.location.pathname.substring(
       window.location.pathname.lastIndexOf('/') + 1
     ));
@@ -28,6 +32,28 @@ function Subscription(props) {
   function switchContractContext(e){
     navigator(pathPrefix+e.target.value)
     fetchOrders(e.target.value)
+  }
+  function assignVariables(respJson){
+    var cleanedResponse =
+      respJson.body.data.subscriptionContract.orders.edges;
+    var filteredOrders = [];
+    //map graphql response to cleaner array structure
+    for (const order of cleanedResponse) {
+      filteredOrders.push(order.node);
+    }
+    setOrders(filteredOrders);
+    //Set subscription product amount to the most recent orders price
+    setProductAmount(respJson.body.data.subscriptionContract.orders.edges[0].node.originalTotalPriceSet.shopMoney.amount);
+    //Set subscription product amount to the most recent orders first product
+    setSubscriptionProduct(respJson.body.data.subscriptionContract.orders.edges[0].node.lineItems.edges[0].node.name);
+    
+    setSubscriptionAddress(
+      respJson.body.data.subscriptionContract.deliveryMethod.address
+    );
+    setPaymentMethod(
+      respJson.body.data.subscriptionContract.customerPaymentMethod
+    );
+    setLoading(false);
   }
   async function fetchOrders(id) {
     setLoading(true)
@@ -41,22 +67,7 @@ function Subscription(props) {
       }
     );
     var respJson = await resp.json();
-    var cleanedResponse =
-      respJson.body.data.subscriptionContract.orders.edges;
-    var filteredOrders = [];
-    for (const order of cleanedResponse) {
-      filteredOrders.push(order.node);
-    }
-    setOrders(filteredOrders);
-    setProductAmount(respJson.body.data.subscriptionContract.orders.edges[0].node.originalTotalPriceSet.shopMoney.amount);
-    setSubscriptionProduct(respJson.body.data.subscriptionContract.orders.edges[0].node.lineItems.edges[0].node.name);
-    setSubscriptionAddress(
-      respJson.body.data.subscriptionContract.deliveryMethod.address
-    );
-    setPaymentMethod(
-      respJson.body.data.subscriptionContract.customerPaymentMethod
-    );
-    setLoading(false);
+    assignVariables(respJson)
   }
 
   function RenderView() {

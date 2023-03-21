@@ -2,28 +2,25 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import Subscription from "./components/Subscription.js";
 import { Routes, Route, useNavigate } from "react-router-dom";
+import mockContracts from "./mock-json/subscriptions.json"
 
 //process.env.REACT_APP_PRODUCTION_MODE ? window.location.pathname+'/' : ''
+const devMode = true;
 
 function App() {
   const [contracts, setContracts] = useState([]);
   const [customer, setCustomer] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigator = useNavigate()
-  const pathPrefix = "/apps/fillstation/web/";
+  const pathPrefix = devMode? "/" : "/apps/fillstation/web/";
   // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {
+    if (devMode)
+    assignVariables(mockContracts)
+    else
     fetchContracts();
   }, []);
-  async function fetchContracts() {
-    var resp = await fetch("/apps/fillstation/api/v1/customer/subscriptions", {
-      method: "GET",
-      mode: "no-cors",
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-      },
-    });
-    var respJson = await resp.json();
+  function assignVariables(respJson){
     var contractsResponse =
       respJson.body.data.customer.subscriptionContracts.edges;
     var filteredResponse = [];
@@ -34,11 +31,22 @@ function App() {
     setContracts(filteredResponse);
     setLoading(false);
 
-    if(window.location.pathname === '/apps/fillstation/web/'){
+    if(window.location.pathname === pathPrefix){
       const firstContract = filteredResponse[0].id.substring(
         filteredResponse[0].id.lastIndexOf('/') + 1)
       navigator(`${pathPrefix}subscription/${firstContract}`)
     }
+  }
+  async function fetchContracts() {
+    var resp = await fetch("/apps/fillstation/api/v1/customer/subscriptions", {
+      method: "GET",
+      mode: "no-cors",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
+    });
+    var respJson = await resp.json();
+    assignVariables(respJson)
   }
 
   
