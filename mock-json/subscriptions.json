@@ -2,24 +2,24 @@
     "body": {
         "data": {
             "customer": {
-                "id": "gid://shopify/Customer/6781947248930",
+                "id": "gid://shopify/Customer/6681447248931",
                 "firstName": "John",
                 "subscriptionContracts": {
                     "edges": [
                         {
-                            "cursor": "eyJsYXN0X2lkIjozNzY5NTE5NjM5MzgsImxhc3RfdmFsdWUiOiIyMDIzLTAyLTE2IDA1OjQwOjU2Ljc0MjQ2MyJ9",
+                            "cursor": "eyJsYXN0X2ldIjozNzY5NTE5NjM5MzgsImxhc3RfdmFsdWUiOiIyMDIzLAAyLTE2IDL1OjQwOjU2Ljc0MjQ2MyJ9",
                             "node": {
-                                "id": "gid://shopify/SubscriptionContract/10842865954",
+                                "id": "gid://shopify/SubscriptionContract/11842865554",
                                 "deliveryMethod": {
                                     "address": {
-                                        "address1": "711 N Sixth St"
+                                        "address1": "1 Main St"
                                     }
                                 },
                                 "lines": {
                                     "edges": [
                                         {
                                             "node": {
-                                                "title": "Refill Canister"
+                                                "title": "Your Product"
                                             }
                                         }
                                     ]
