@@ -3,18 +3,18 @@
         "data": {
             "subscriptionContract": {
                 "customer": {
-                    "email": "fsalerno@sodasense.com"
+                    "email": "user@company.com"
                 },
                 "deliveryMethod": {
                     "address": {
-                        "address1": "711 N Sixth St",
+                        "address1": "1 Main St",
                         "address2": "",
-                        "city": "Appleton",
+                        "city": "Seymour",
                         "country": "United States",
                         "countryCode": "US",
                         "province": "Wisconsin",
                         "provinceCode": "WI",
-                        "zip": "54113",
+                        "zip": "54165",
                         "name": "John Doe",
                         "company": "",
                         "firstName": "John",
@@ -23,7 +23,7 @@
                     }
                 },
                 "customerPaymentMethod": {
-                    "id": "gid://shopify/CustomerPaymentMethod/4341a0d5ddf27b6441fd9b02feb9c342",
+                    "id": "gid://shopify/CustomerPaymentMethod/4341a2d5ddf26b6441fd9b02aeb9c342",
                     "instrument": {
                         "maskedNumber": "•••• •••• •••• 4242",
                         "source": "credit_card",
@@ -33,11 +33,11 @@
                         "billingAddress": {
                             "firstName": "John",
                             "lastName": "Doe",
-                            "address1": "711 N Sixth St",
-                            "city": "Appleton",
+                            "address1": "1 Main St",
+                            "city": "Seymour",
                             "province": "Wisconsin",
                             "countryCode": "US",
-                            "zip": "54115"
+                            "zip": "54165"
                         }
                     }
                 },
@@ -57,7 +57,7 @@
                                     "edges": [
                                         {
                                             "node": {
-                                                "name": "Refill Canister",
+                                                "name": "Your Product",
                                                 "image": null
                                             }
                                         }
@@ -91,5 +91,5 @@
                 }
             }
         },
-    },  
+    },
 }
