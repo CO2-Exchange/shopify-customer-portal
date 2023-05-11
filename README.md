@@ -7,15 +7,14 @@
 
 To run dev:
 
-Switch mode to dev ( This will utilize mockjson payloads, and modify the app path prefix )
+Create a .env with NODE_ENV=development
+This will use mock jsons instead of api calls. 
+It will also modify the path of the react router.
 
 
 yarn 
 
-yarn dev
-
-
-
+yarn start
 
 
 To build for production:

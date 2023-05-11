@@ -38,6 +38,21 @@
           "zip": "54115"
         }
       }
+    }, 
+    "lines": {
+      "edges": [
+        {
+          "node": {
+            "title": "Refill",
+            "currentPrice": {
+              "amount": "4.90"
+            },
+            "variantImage": {
+              "url": "https://cdn.shopify.com/s/files/1/0262/9258/4497/products/Box_d25cc415-883c-4f66-822c-d3495db7d31d_1024x1024.png?v=1661777199"
+            }
+          }
+        }
+      ]
     },
     "orders": {
       "edges": [
