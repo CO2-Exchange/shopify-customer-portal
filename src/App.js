@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import "./App.css";
-import Subscription from "./components/Subscription.js";
-import { Routes, Route, useNavigate } from "react-router-dom";
-import mockContracts from "./mock-json/subscriptions.json"
+import { useEffect, useState } from 'react';
+import './App.css';
+import Subscription from './components/Subscription.js';
+import { Route, Routes, useNavigate } from 'react-router-dom';
+import mockContracts from './mock-json/subscriptions.json';
 
 //process.env.REACT_APP_PRODUCTION_MODE ? window.location.pathname+'/' : ''
-const devMode = true;
+const devMode = process.env.NODE_ENV === 'development';
 
 function App() {
   const [contracts, setContracts] = useState([]);
@@ -13,7 +13,9 @@ function App() {
   const [loading, setLoading] = useState(true);
   const navigator = useNavigate()
   const pathPrefix = devMode? "/" : "/apps/fillstation/web/";
-  // Similar to componentDidMount and componentDidUpdate:
+
+  // In dev mode, assign local variables to mockjson. 
+  // In production, fetch contracts and assignVariables
   useEffect(() => {
     if (devMode)
     assignVariables(mockContracts)
@@ -22,16 +24,16 @@ function App() {
   }, []);
   function assignVariables(respJson){
     var contractsResponse =
-      respJson.body.data.customer.subscriptionContracts.edges;
+      respJson.customer.subscriptionContracts.edges;
     var filteredResponse = [];
     for (const contract of contractsResponse) {
       filteredResponse.push(contract.node);
     }
-    setCustomer(respJson.body.data.customer);
+    setCustomer(respJson.customer);
     setContracts(filteredResponse);
     setLoading(false);
 
-    if(window.location.pathname === pathPrefix){
+    if(window.location.pathname === pathPrefix || window.location.pathname + "/" === pathPrefix) {
       const firstContract = filteredResponse[0].id.substring(
         filteredResponse[0].id.lastIndexOf('/') + 1)
       navigator(`${pathPrefix}subscription/${firstContract}`)
@@ -49,7 +51,7 @@ function App() {
     assignVariables(respJson)
   }
 
-  
+
   return (
     <>
       <div class="sm:container mx-auto">
@@ -61,7 +63,6 @@ function App() {
                 contracts={contracts}
                 customer={customer}
                 fetchContracts={fetchContracts}
-                pathPrefix={pathPrefix}
               />
             }
           ></Route>

@@ -5,22 +5,16 @@
 [Notion Docs](https://www.notion.so/sodasense/Shopify-Fill-Station-App-3e3ab6fc53de4e8995c135d211d3000a)
 
 
-For building your theme, run in devMode
- 
-You wont have to do anything to run in dev mode initially  
-There are 2 boolean variables, one in each file, Subscription.js and App.js.  
-
-Each have devMode = true
-
-This will tell the app to use mockjson files, instead of API requests.   
-Dev mode will also swap the pathPrefix to use root paths instead of the required app_proxy prefix paths.   
-
 To run dev:
+
+Create a .env with NODE_ENV=development
+This will use mock jsons instead of api calls. 
+It will also modify the path of the react router.
+
 
 yarn 
 
 yarn start
-
 
 
 To build for production:

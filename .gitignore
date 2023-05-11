@@ -15,6 +15,7 @@
 
 /template
 
+.env
 
 # misc
 .DS_Store

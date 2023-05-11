@@ -1,95 +1,106 @@
 {
-  "body": {
-    "data": {
-      "subscriptionContract": {
-        "customer": {
-          "email": "fsalerno@sodasense.com"
-        },
-        "deliveryMethod": {
-          "address": {
-            "address1": "711 N Sixth St",
-            "address2": "",
-            "city": "Appleton",
-            "country": "United States",
-            "countryCode": "US",
-            "province": "Wisconsin",
-            "provinceCode": "WI",
-            "zip": "54113",
-            "name": "John Doe",
-            "company": "",
-            "firstName": "John",
-            "lastName": "Doe",
-            "phone": null
-          }
-        },
-        "customerPaymentMethod": {
-          "id": "gid://shopify/CustomerPaymentMethod/4341a0d5ddf27b6441fd9b02feb9c342",
-          "instrument": {
-            "maskedNumber": "•••• •••• •••• 4242",
-            "source": "credit_card",
-            "brand": "visa",
-            "expiryMonth": 4,
-            "expiryYear": 2024,
-            "billingAddress": {
-              "firstName": "John",
-              "lastName": "Doe",
-              "address1": "711 N Sixth St",
-              "city": "Appleton",
-              "province": "Wisconsin",
-              "countryCode": "US",
-              "zip": "54115"
-            }
-          }
-        },
-        "orders": {
-          "edges": [
-            {
-              "node": {
-                "id": "gid://shopify/Order/5256796897570",
-                "name": "#1001",
-                "createdAt": "2023-02-16T05:40:55Z",
-                "originalTotalPriceSet": {
-                  "shopMoney": {
-                    "amount": "4.9"
-                  }
-                },
-                "lineItems": {
-                  "edges": [
-                    {
-                      "node": {
-                        "name": "Refill Canister",
-                        "image": null
-                      }
-                    }
-                  ]
-                }
-              }
-            },
-            {
-              "node": {
-                "id": "gid://shopify/Order/5260151390498",
-                "name": "#1006",
-                "createdAt": "2023-02-21T21:13:37Z",
-                "originalTotalPriceSet": {
-                  "shopMoney": {
-                    "amount": "4.9"
-                  }
-                },
-                "lineItems": {
-                  "edges": [
-                    {
-                      "node": {
-                        "name": "Refill Canister",
-                        "image": null
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          ]
+  "subscriptionContract": {
+    "customer": {
+      "email": "fsalerno@sodasense.com"
+    },
+    "deliveryMethod": {
+      "address": {
+        "address1": "711 N Sixth St",
+        "address2": "",
+        "city": "Appleton",
+        "country": "United States",
+        "countryCode": "US",
+        "province": "Wisconsin",
+        "provinceCode": "WI",
+        "zip": "54113",
+        "name": "John Doe",
+        "company": "",
+        "firstName": "John",
+        "lastName": "Doe",
+        "phone": null
+      }
+    },
+    "customerPaymentMethod": {
+      "id": "gid://shopify/CustomerPaymentMethod/4341a0d5ddf27b6441fd9b02feb9c342",
+      "instrument": {
+        "maskedNumber": "•••• •••• •••• 4242",
+        "source": "credit_card",
+        "brand": "visa",
+        "expiryMonth": 4,
+        "expiryYear": 2024,
+        "billingAddress": {
+          "firstName": "John",
+          "lastName": "Doe",
+          "address1": "711 N Sixth St",
+          "city": "Appleton",
+          "province": "Wisconsin",
+          "countryCode": "US",
+          "zip": "54115"
         }
       }
+    }, 
+    "lines": {
+      "edges": [
+        {
+          "node": {
+            "title": "Refill",
+            "currentPrice": {
+              "amount": "4.90"
+            },
+            "variantImage": {
+              "url": "https://cdn.shopify.com/s/files/1/0262/9258/4497/products/Box_d25cc415-883c-4f66-822c-d3495db7d31d_1024x1024.png?v=1661777199"
+            }
+          }
+        }
+      ]
+    },
+    "orders": {
+      "edges": [
+        {
+          "node": {
+            "id": "gid://shopify/Order/5256796897570",
+            "name": "#1001",
+            "createdAt": "2023-02-16T05:40:55Z",
+            "originalTotalPriceSet": {
+              "shopMoney": {
+                "amount": "4.9"
+              }
+            },
+            "lineItems": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "Refill Canister",
+                    "image": null
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "id": "gid://shopify/Order/5260151390498",
+            "name": "#1006",
+            "createdAt": "2023-02-21T21:13:37Z",
+            "originalTotalPriceSet": {
+              "shopMoney": {
+                "amount": "4.9"
+              }
+            },
+            "lineItems": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "Refill Canister",
+                    "image": null
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
     }
   }
 }
