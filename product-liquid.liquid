@@ -1,0 +1,36 @@
+<!-- Your product page template -->
+
+
+
+
+<!-- Required selling plan form, the submit button must be your 'add to cart button, or checkout button' -->
+{%- liquid
+ assign current_variant = product.selected_or_first_available_variant | default: product.variants.first
+ assign current_selling_plan_allocation = current_variant.selected_selling_plan_allocation
+
+ if current_selling_plan_allocation == nil and current_variant.requires_selling_plan
+  assign current_selling_plan_allocation = current_variant.selling_plan_allocations | first
+ endif
+
+-%}
+
+{% form 'product', product %}
+  <input type="hidden" name="id" value="{{ current_variant.id }}">
+  <input type="hidden" name="selling_plan" value="{{ current_selling_plan_allocation.selling_plan.id | default: '' }}">
+  
+  <!-- Pass the product object as JSON so it can be used to update selling plan information using JavaScript -->
+  <div data-product={{ product | json }}>
+    {% unless product.requires_selling_plan %}
+    <input type="radio" name="purchase_option"> One-time purchase
+    {% endunless %}
+
+    {% for group in product.selling_plan_groups %}
+			<!-- you should only use one selling plan group --> 
+      <input hidden checked type="radio" name="purchase_option"> 
+
+      
+    {% endfor %}
+  </div>
+	<!-- Customize me -->
+  <input type="submit">
+{% endform %}

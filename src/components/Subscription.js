@@ -2,14 +2,13 @@ import { useEffect, useState } from 'react';
 import AccountInformation from './AccountInformation.js';
 import ExchangeHistory from './ExchangeHistory.js';
 import MembershipOverview from './MembershipOverview.js';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import contractsDetailsMockJson from '../mock-json/subscription-details.json';
-
 
 // Component housing the subscriptions view
 // Responsible for fetching contract details
 // Navigation between contracts
-const devMode = true;
+const devMode = process.env.NODE_ENV === 'development';
 
 function Subscription(props) {
   const [orders, setOrders] = useState(null);
@@ -21,21 +20,24 @@ function Subscription(props) {
   const navigator = useNavigate()
   const pathPrefix = devMode? "/subscription/" : "/apps/fillstation/web/subscription/";
 
+  // In dev mode, assign local variables to mockjson. 
+  // In production, fetch contracts and assignVariables
   useEffect(() => {
     if(devMode)
     assignVariables(contractsDetailsMockJson)
     else
-    fetchOrders(window.location.pathname.substring(
+    fetchSubscription(window.location.pathname.substring(
       window.location.pathname.lastIndexOf('/') + 1
     ));
   }, []);
-  function switchContractContext(e){
+
+  function navigateToSubscription(e){
     navigator(pathPrefix+e.target.value)
-    fetchOrders(e.target.value)
+    fetchSubscription(e.target.value)
   }
   function assignVariables(respJson){
     var cleanedResponse =
-      respJson.body.data.subscriptionContract.orders.edges;
+      respJson.subscriptionContract.orders.edges;
     var filteredOrders = [];
     //map graphql response to cleaner array structure
     for (const order of cleanedResponse) {
@@ -43,22 +45,22 @@ function Subscription(props) {
     }
     setOrders(filteredOrders);
     //Set subscription product amount to the most recent orders price
-    setProductAmount(respJson.body.data.subscriptionContract.orders.edges[0].node.originalTotalPriceSet.shopMoney.amount);
+    setProductAmount(respJson.subscriptionContract.orders.edges[0].node.originalTotalPriceSet.shopMoney.amount);
     //Set subscription product amount to the most recent orders first product
-    setSubscriptionProduct(respJson.body.data.subscriptionContract.orders.edges[0].node.lineItems.edges[0].node.name);
-    
+    setSubscriptionProduct(respJson.subscriptionContract.orders.edges[0].node.lineItems.edges[0].node.name);
+
     setSubscriptionAddress(
-      respJson.body.data.subscriptionContract.deliveryMethod.address
+      respJson.subscriptionContract.deliveryMethod.address
     );
     setPaymentMethod(
-      respJson.body.data.subscriptionContract.customerPaymentMethod
+      respJson.subscriptionContract.customerPaymentMethod
     );
     setLoading(false);
   }
-  async function fetchOrders(id) {
+  async function fetchSubscription(id) {
     setLoading(true)
     var resp = await fetch(
-      `/apps/fillstation/api/v1/subscription/orders?subscriptionContractId=${id}`,
+      `/apps/fillstation/api/v1/customer/subscription?subscriptionContractId=${id}`,
       {
         method: 'GET',
         headers: {
@@ -70,43 +72,22 @@ function Subscription(props) {
     assignVariables(respJson)
   }
 
-  function RenderView() {
+  function SubscriptionPage() {
     if (loading) return <h1>loading</h1>;
     return (
       <main class='gap-4 lg:gap-8 grid grid-cols-1 lg:grid-cols-12 p-4 lg:p-8'>
         <nav class='col-span-full flex justify-between' aria-label='Breadcrumb'>
           <ol class='inline-flex items-center space-x-1 md:space-x-3'>
-            <li class='inline-flex items-center w-24'>
-              <Link
-                to={props.pathPrefix}
-                class='inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600'
-              >
-                Refill Club Membership
-              </Link>
-            </li>
-            <svg
-              aria-hidden='true'
-              class='w-6 h-6 text-gray-400'
-              fill='currentColor'
-              viewBox='0 0 20 20'
-              xmlns='http://www.w3.org/2000/svg'
-            >
-              <path
-                fillRule='evenodd'
-                d='M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z'
-                clipRule='evenodd'
-              ></path>
-            </svg>
             <select
               class='border border-gray-300 text-gray-900 text-sm rounded-r-lg border-l-gray-100 dark:border-l-gray-700 border-l-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'
               name='provinceCode'
-              onChange={switchContractContext}
+              onChange={navigateToSubscription}
             >
               {props.contracts.map((contract) => {
                 return (
                   <option key={contract.id} value={contract.id.substring(
                     contract.id.lastIndexOf('/') + 1)}>
-                    {contract.deliveryMethod.address.address1}{' '}{contract.lines.edges[0].node.title} 
+                    {contract.deliveryMethod.address.address1}{' '}{contract.lines.edges[0].node.title}
                   </option>
                 );
               })}
@@ -133,7 +114,7 @@ function Subscription(props) {
     );
   }
 
-  return <>{RenderView()}</>;
+  return <SubscriptionPage></SubscriptionPage>;
 }
 
 export default Subscription;
