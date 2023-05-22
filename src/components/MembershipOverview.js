@@ -2,6 +2,11 @@
 // Also houses actions for requesting replacement label and replacement box
 // Will be used to supply discounts (if/when supported)
 
+const formatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD'
+});
+
 function MembershipOverview({ address, product, price, image }) {
   return (
     <div class="bg-white col-span-full lg:col-span-8 order-1 p-4 rounded-lg shadow">
@@ -20,7 +25,7 @@ function MembershipOverview({ address, product, price, image }) {
           </div>
           <div class="">
             <div class="text-gray-500">Total</div>
-            <div>{price}</div>
+            <div>{formatter.format(price)}</div>
           </div>
         </div>
         <button class="border-2 border-blue-500 col-span-full md:col-span-2 p-2 rounded-md text-blue-500 place-self-center w-full">Email Me a Mailing Label</button>

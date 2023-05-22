@@ -1,6 +1,10 @@
+const formatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD'
+});
 
 // Component for viewing most recent subscription orders
-function ExchangeHistory({orders}) {
+function ExchangeHistory({ orders }) {
   function RenderOrders() {
     if (orders == null) {
       return <></>;
@@ -16,7 +20,7 @@ function ExchangeHistory({orders}) {
               {order.name}
             </td>
             <td class='p-4 text-sm font-semibold text-gray-900 whitespace-nowrap'>
-              {order.originalTotalPriceSet.shopMoney.amount}
+              {formatter.format(order.originalTotalPriceSet.shopMoney.amount)}
             </td>
             <td class='p-4 whitespace-nowrap rounded-r-lg'>
               <span class='bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-md'>
