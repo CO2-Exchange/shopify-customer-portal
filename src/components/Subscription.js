@@ -18,14 +18,21 @@ function Subscription(props) {
   const [subscriptionProduct, setSubscriptionProduct] = useState('');
   const [variantImage, setVariantImage] = useState('');
   const [subscriptionProductAmount, setProductAmount] = useState(null);
+  const [subscriptionStatus, setSubscriptionStatus] = useState('ACTIVE');
+  const [contractId, setContractId] = useState(0)
+
   const navigator = useNavigate();
   const pathPrefix = devMode ? '/subscription/' : '/apps/fillstation/web/subscription/';
 
   // In dev mode, assign local variables to mockjson.
   // In production, fetch contracts and assignVariables
   useEffect(() => {
+    const subId = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
+    setContractId(subId)
     if (devMode) assignVariables(contractsDetailsMockJson);
-    else fetchSubscription(window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1));
+    else{
+      fetchSubscription(subId);
+    }
   }, []);
 
   function navigateToSubscription(e) {
@@ -47,9 +54,35 @@ function Subscription(props) {
 
     if (respJson.subscriptionContract.lines.edges[0].node.variantImage.url) setVariantImage(respJson.subscriptionContract.lines.edges[0].node.variantImage.url);
 
-    setSubscriptionAddress(respJson.subscriptionContract.deliveryMethod.address);
+    if (respJson.subscriptionContract.deliveryMethod){
+      setSubscriptionAddress(respJson.subscriptionContract.deliveryMethod.address);
+    }
+    else{
+      setSubscriptionAddress(null);
+    }
     setPaymentMethod(respJson.subscriptionContract.customerPaymentMethod);
     setLoading(false);
+  }
+  async function updateSubscriptionStatus(){
+    let newStatus = subscriptionStatus;
+    if (subscriptionStatus === 'ACTIVE'){
+      newStatus = 'CANCELLED';
+      setSubscriptionStatus('CANCELLED')
+    }
+    else {
+      newStatus = 'ACTIVE';
+      setSubscriptionStatus('ACTIVE')
+    }
+    var resp = await fetch(`/apps/fillstation/api/v1/subscription/update-status`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ subscriptionContractId: contractId, status: newStatus })
+    });
+    var respJson = await resp.json();
+    assignVariables(respJson);
+    fetchSubscription(contractId);
   }
   async function fetchSubscription(id) {
     setLoading(true);
@@ -62,6 +95,25 @@ function Subscription(props) {
     var respJson = await resp.json();
     assignVariables(respJson);
   }
+  async function sendReplacementEmail(){
+    // var resp = await fetch(`https://kmebxd45fj.execute-api.us-east-2.amazonaws.com/Prod/ajax/create-label-order`, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify({ subscriptionContractId: contractId, status: newStatus })
+    // });
+  }
+  async function sendReplacementBox(){
+    // var resp = await fetch(`https://kmebxd45fj.execute-api.us-east-2.amazonaws.com/Prod/ajax/send-replacement-box`, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify({ subscriptionContractId: contractId, status: newStatus })
+    // });
+    
+  }
 
   function SubscriptionPage() {
     if (loading) return <h1>loading</h1>;
@@ -73,7 +125,7 @@ function Subscription(props) {
               {props.contracts.map(contract => {
                 return (
                   <option key={contract.id} value={contract.id.substring(contract.id.lastIndexOf('/') + 1)}>
-                    {contract.deliveryMethod.address.address1} {contract.lines.edges[0].node.title}
+                    {contract.deliveryMethod?.address?.address1} {contract.lines.edges[0].node.title}
                   </option>
                 );
               })}
@@ -85,7 +137,8 @@ function Subscription(props) {
           <MembershipOverview address={subscriptionAddress} product={subscriptionProduct} price={subscriptionProductAmount} image={variantImage}></MembershipOverview>
           <ExchangeHistory orders={orders}></ExchangeHistory>
         </div>
-        <AccountInformation subscriptionAddress={subscriptionAddress} paymentMethod={paymentMethod} contractId={window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1)}></AccountInformation>
+        <AccountInformation fetchSubscription={fetchSubscription} subscriptionAddress={subscriptionAddress} paymentMethod={paymentMethod} contractId={contractId}></AccountInformation>
+        {/*<button onClick={()=> updateSubscriptionStatus() }>{subscriptionStatus === 'ACTIVE' ? <>Cancel Subscription</> : <>Re-Activate Subscription</>}</button>*/}
       </main>
     );
   }

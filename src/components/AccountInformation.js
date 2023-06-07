@@ -1,5 +1,5 @@
 import UpdateToast from "./UpdateToast.js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UpdateAddressModal from "./UpdateAddressModal.js";
 
 
@@ -7,7 +7,7 @@ import UpdateAddressModal from "./UpdateAddressModal.js";
 // Updating credit cards/billing address
 // Update address
 
-function AccountInformation({ subscriptionAddress, paymentMethod, contractId }) {
+function AccountInformation({ subscriptionAddress, paymentMethod, contractId, fetchSubscription }) {
   const [toastMsg, setToastMsg] = useState("")
   const [toastVisible, setToastVisible] = useState(false)
   const [addressModalOpen, setAddressModalOpen] = useState(false);
@@ -22,6 +22,7 @@ function AccountInformation({ subscriptionAddress, paymentMethod, contractId }) 
         window.location.pathname.lastIndexOf('/') + 1), paymentMethodId: paymentMethod.id })
     });
     activateToast("Sent Update Email!")
+    fetchSubscription(contractId)
   }
   async function updateAddress(address){
     activateToast("Updated Address!")
@@ -48,8 +49,10 @@ function AccountInformation({ subscriptionAddress, paymentMethod, contractId }) 
         }),
       }
     );
-    
-  }
+    fetchSubscription(contractId)
+  } 
+  useEffect(() => {
+  }, [subscriptionAddress]);
   async function activateToast(message){
     setToastMsg(message)
     setToastVisible(true)
@@ -73,13 +76,13 @@ function AccountInformation({ subscriptionAddress, paymentMethod, contractId }) 
               <button onClick={()=> setAddressModalOpen(true)}class='text-blue-500 underline'>Edit</button>
             </div>
             <div class='font-medium'>
-              {subscriptionAddress.name}
+              {subscriptionAddress?.name}
               <br />
-              {subscriptionAddress.address1}
-              {subscriptionAddress.address2}
+              {subscriptionAddress?.address1}
+              {subscriptionAddress?.address2}
               <br />
-              {subscriptionAddress.city} {subscriptionAddress.provinceCode}{' '}
-              {subscriptionAddress.zip}
+              {subscriptionAddress?.city} {subscriptionAddress?.provinceCode}{' '}
+              {subscriptionAddress?.zip}
             </div>
           </div>
 
@@ -106,14 +109,14 @@ function AccountInformation({ subscriptionAddress, paymentMethod, contractId }) 
               <button onClick={()=> {updatePaymentMethod()}} class='text-blue-500 underline'>Edit</button>
             </div>
             <div class='font-medium'>
-              {paymentMethod.instrument.billingAddress.firstName}{' '}
-              {paymentMethod.instrument.billingAddress.lastName}
+              {paymentMethod?.instrument?.billingAddress?.firstName}{' '}
+              {paymentMethod?.instrument?.billingAddress?.lastName}
               <br />
-              {paymentMethod.instrument.billingAddress.address1}
+              {paymentMethod?.instrument?.billingAddress?.address1}
               <br />
-              {paymentMethod.instrument.billingAddress.city}{' '}
-              {paymentMethod.instrument.billingAddress.provinceCode}{' '}
-              {paymentMethod.instrument.billingAddress.zip}
+              {paymentMethod?.instrument?.billingAddress?.city}{' '}
+              {paymentMethod?.instrument?.billingAddress?.provinceCode}{' '}
+              {paymentMethod?.instrument?.billingAddress?.zip}
             </div>
           </div>
         </div>
