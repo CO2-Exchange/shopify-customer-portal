@@ -29,7 +29,8 @@ function MembershipOverview({ address, product, price, image }) {
           </div>
         </div>
         <button class="border-2 border-blue-500 col-span-full md:col-span-2 p-2 rounded-md text-blue-500 place-self-center w-full">Email Me a Mailing Label</button>
-        <form class="col-span-full md:col-span-2">
+        <div class="col-span-full hidden md:block md:col-span-2"></div>
+        <form class="col-span-full md:col-span-2 hidden">
           <label for="discount-code" class="text-gray-500 text-sm">
             Apply Discount Code To Your Next Refill
           </label>
