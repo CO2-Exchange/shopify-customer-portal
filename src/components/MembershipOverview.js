@@ -7,14 +7,15 @@ const formatter = new Intl.NumberFormat('en-US', {
   currency: 'USD'
 });
 
-function MembershipOverview({ address, product, price, image }) {
+
+function MembershipOverview({ address, product, price, image, sendReplacementEmail, sendReplacementBox }) {
   return (
     <div class="bg-white col-span-full lg:col-span-8 order-1 p-4 rounded-lg shadow">
       <div class="mb-4">
-        <h3 class="text-xl font-bold text-gray-900">Membership Overview</h3>
+        <h3 class="text-xl font-bold text-gray-900 underline">Membership Overview</h3>
       </div>
       <div class="mb-4">
-        {address.address1} {address.address2}, {address.city} {address.provinceCode}, {address.zip}
+        {address?.address1} {address?.address2}, {address?.city} {address?.provinceCode}, {address?.zip}
       </div>
       <div class="gap-8 grid grid-cols-12 md:grid-cols-5 md:grid-flow-col md:grid-rows-2">
         {image ? <img src={image} class="col-span-4 md:col-span-1 md:row-span-2" /> : <></>}
@@ -28,14 +29,14 @@ function MembershipOverview({ address, product, price, image }) {
             <div>{formatter.format(price)}</div>
           </div>
         </div>
-        <button class="border-2 border-blue-500 col-span-full md:col-span-2 p-2 rounded-md text-blue-500 place-self-center w-full">Email Me a Mailing Label</button>
-        <form class="col-span-full md:col-span-2">
+        <button onClick={() => sendReplacementEmail()} class="border-2 border-blue-500 col-span-full md:col-span-2 p-2 rounded-md text-blue-500 place-self-center w-full">Email Me a Mailing Label</button>
+        {/*<form class="col-span-full md:col-span-2">
           <label for="discount-code" class="text-gray-500 text-sm">
             Apply Discount Code To Your Next Refill
           </label>
           <input id="discount-code" type="text" class="bg-gray-50 rounded-md shadow-inner w-full" />
-        </form>
-        <button class="border-2 border-blue-500 col-span-full md:col-span-2 p-2 rounded-md text-blue-500 place-self-center w-full">Send Me a Refill Box</button>
+        </form>*/}
+        <button onClick={() => sendReplacementBox()} class="border-2 border-blue-500 col-span-full md:col-span-2 p-2 rounded-md text-blue-500 place-self-center w-full">Send Me a Refill Box</button>
       </div>
     </div>
   );
