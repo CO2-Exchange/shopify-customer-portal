@@ -29,14 +29,14 @@ function MembershipOverview({ address, product, price, image, sendReplacementEma
             <div>{formatter.format(price)}</div>
           </div>
         </div>
-
         <button onClick={() => sendReplacementEmail()} class="border-2 border-blue-500 col-span-full md:col-span-2 p-2 rounded-md text-blue-500 place-self-center w-full">Email Me a Mailing Label</button>
-        {/*<form class="col-span-full md:col-span-2">
+        <div class="col-span-full hidden md:block md:col-span-2"></div>
+        <form class="col-span-full md:col-span-2 hidden">
           <label for="discount-code" class="text-gray-500 text-sm">
             Apply Discount Code To Your Next Refill
           </label>
           <input id="discount-code" type="text" class="bg-gray-50 rounded-md shadow-inner w-full" />
-        </form>*/}
+        </form>
         <button onClick={() => sendReplacementBox()} class="border-2 border-blue-500 col-span-full md:col-span-2 p-2 rounded-md text-blue-500 place-self-center w-full">Send Me a Refill Box</button>
       </div>
     </div>
