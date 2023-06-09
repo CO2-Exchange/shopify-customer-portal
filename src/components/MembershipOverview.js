@@ -29,6 +29,7 @@ function MembershipOverview({ address, product, price, image, sendReplacementEma
             <div>{formatter.format(price)}</div>
           </div>
         </div>
+
         <button onClick={() => sendReplacementEmail()} class="border-2 border-blue-500 col-span-full md:col-span-2 p-2 rounded-md text-blue-500 place-self-center w-full">Email Me a Mailing Label</button>
         {/*<form class="col-span-full md:col-span-2">
           <label for="discount-code" class="text-gray-500 text-sm">
