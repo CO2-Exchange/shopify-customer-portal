@@ -27,7 +27,7 @@ function AccountInformation({ subscriptionAddress, paymentMethod, contractId, fe
     activateToast("Updated Address!")
     setAddressModalOpen(false)
     var resp = await fetch(
-      '/apps/fillstation/api/v1/subscription/update-address',
+      `/apps/fillstation/api/v1/subscription/${contractId}/update-address`,
       {
         method: 'POST',
         headers: {
@@ -44,7 +44,6 @@ function AccountInformation({ subscriptionAddress, paymentMethod, contractId, fe
           lastName: address.lastName,
           company: address.company,
           phone: address.phone,
-          subscriptionContractId: contractId,
         }),
       }
     );

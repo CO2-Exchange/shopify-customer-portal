@@ -97,6 +97,7 @@ function Subscription(props) {
     });
     var respJson = await resp.json();
     assignVariables(respJson);
+    props.fetchContracts();
   }
   async function sendReplacementBox(){
     var resp = await fetch(`/apps/fillstation/api/v1/subscription/${contractId}/action/clit9khuz0000pb0wnl8wlea6`, {
