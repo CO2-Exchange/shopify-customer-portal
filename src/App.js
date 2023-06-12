@@ -60,6 +60,7 @@ function App() {
             path={pathPrefix + "subscription/:id"}
             element={
               <Subscription
+                key={window.location.pathname}
                 contracts={contracts}
                 customer={customer}
                 fetchContracts={fetchContracts}
