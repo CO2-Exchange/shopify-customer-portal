@@ -19,7 +19,8 @@ function Subscription(props) {
   const [variantImage, setVariantImage] = useState('');
   const [subscriptionProductAmount, setProductAmount] = useState(null);
   const [subscriptionStatus, setSubscriptionStatus] = useState('ACTIVE');
-  const [contractId, setContractId] = useState(0)
+  const [contractId, setContractId] = useState(0);
+
 
   const navigator = useNavigate();
   const pathPrefix = devMode ? '/subscription/' : '/apps/fillstation/web/subscription/';
@@ -40,6 +41,8 @@ function Subscription(props) {
     fetchSubscription(e.target.value);
   }
   function assignVariables(respJson) {
+    console.log('assigning variables')
+    console.log(JSON.stringify(respJson, undefined, 2))
     var cleanedResponse = respJson.subscriptionContract.orders.edges;
     var filteredOrders = [];
     //map graphql response to cleaner array structure
@@ -95,23 +98,14 @@ function Subscription(props) {
     var respJson = await resp.json();
     assignVariables(respJson);
   }
-  async function sendReplacementEmail(){
-    // var resp = await fetch(`https://kmebxd45fj.execute-api.us-east-2.amazonaws.com/Prod/ajax/create-label-order`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({ subscriptionContractId: contractId, status: newStatus })
-    // });
-  }
   async function sendReplacementBox(){
-    // var resp = await fetch(`https://kmebxd45fj.execute-api.us-east-2.amazonaws.com/Prod/ajax/send-replacement-box`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({ subscriptionContractId: contractId, status: newStatus })
-    // });
+    var resp = await fetch(`/apps/fillstation/api/v1/subscription/action/clisz8cj4000qs1qicq8z8qgc`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ subscriptionContractId: contractId, code: 'replacement-box' })
+    });
     
   }
 
@@ -134,7 +128,7 @@ function Subscription(props) {
         </nav>
 
         <div class="grid grid-cols-12 items-start lg:block lg:col-span-8 lg:space-y-8 space-y-4">
-          <MembershipOverview address={subscriptionAddress} product={subscriptionProduct} price={subscriptionProductAmount} image={variantImage}></MembershipOverview>
+          <MembershipOverview address={subscriptionAddress} product={subscriptionProduct} price={subscriptionProductAmount} image={variantImage} sendReplacementBox={sendReplacementBox}></MembershipOverview>
           <ExchangeHistory orders={orders}></ExchangeHistory>
         </div>
         <AccountInformation fetchSubscription={fetchSubscription} subscriptionAddress={subscriptionAddress} paymentMethod={paymentMethod} contractId={contractId}></AccountInformation>

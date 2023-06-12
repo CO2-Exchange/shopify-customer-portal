@@ -1,3 +1,5 @@
+import { formatShopifyId } from "../utils/formatters.js";
+
 const formatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD'
@@ -23,8 +25,13 @@ function ExchangeHistory({ orders }) {
               {formatter.format(order.originalTotalPriceSet.shopMoney.amount)}
             </td>
             <td class='p-4 whitespace-nowrap rounded-r-lg'>
+              <span class='text-xs font-medium mr-2 px-2.5 py-0.5 text-blue-500 underline' >
+                <a href={`http://api.sodasense.com/orders/label/tracking/marketplace/${formatShopifyId(order.id)}/${formatShopifyId(order.lineItems.edges[0].node.id)}/pdf`}>Download</a>
+              </span>
+            </td>
+            <td class='p-4 whitespace-nowrap rounded-r-lg'>
               <span class='bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-md'>
-                {order.createdAt}
+                {new Date(order.createdAt).toLocaleString()}
               </span>
             </td>
           </tr>
@@ -55,6 +62,12 @@ function ExchangeHistory({ orders }) {
               class='p-4 text-xs font-medium tracking-wider text-left text-gray-500 uppercase'
             >
               Price
+            </th>
+            <th
+              scope='col'
+              class='p-4 text-xs font-medium tracking-wider text-left text-gray-500 uppercase'
+            >
+              Download Return Label
             </th>
             <th
               scope='col'
