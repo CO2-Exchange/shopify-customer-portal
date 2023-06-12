@@ -89,7 +89,7 @@ function Subscription(props) {
   }
   async function fetchSubscription(id) {
     setLoading(true);
-    var resp = await fetch(`/apps/fillstation/api/v1/customer/subscription?subscriptionContractId=${id}`, {
+    var resp = await fetch(`/apps/fillstation/api/v1/customer/subscription/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -97,9 +97,10 @@ function Subscription(props) {
     });
     var respJson = await resp.json();
     assignVariables(respJson);
+    props.fetchContracts();
   }
   async function sendReplacementBox(){
-    var resp = await fetch(`/apps/fillstation/api/v1/subscription/action/clisz8cj4000qs1qicq8z8qgc`, {
+    var resp = await fetch(`/apps/fillstation/api/v1/subscription/${contractId}/action/clit9khuz0000pb0wnl8wlea6`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

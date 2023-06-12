@@ -13,13 +13,12 @@ function AccountInformation({ subscriptionAddress, paymentMethod, contractId, fe
   const [addressModalOpen, setAddressModalOpen] = useState(false);
 
   async function updatePaymentMethod() {
-    var resp = await fetch('/apps/fillstation/api/v1/subscription/update-payment', {
+    var resp = await fetch(`/apps/fillstation/api/v1/subscription/${contractId}/update-payment`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ subscriptionContractId: window.location.pathname.substring(
-        window.location.pathname.lastIndexOf('/') + 1), paymentMethodId: paymentMethod.id })
+      body: JSON.stringify({ paymentMethodId: paymentMethod.id })
     });
     activateToast("Sent Update Email!")
     fetchSubscription(contractId)
@@ -28,7 +27,7 @@ function AccountInformation({ subscriptionAddress, paymentMethod, contractId, fe
     activateToast("Updated Address!")
     setAddressModalOpen(false)
     var resp = await fetch(
-      '/apps/fillstation/api/v1/subscription/update-address',
+      `/apps/fillstation/api/v1/subscription/${contractId}/update-address`,
       {
         method: 'POST',
         headers: {
@@ -45,7 +44,6 @@ function AccountInformation({ subscriptionAddress, paymentMethod, contractId, fe
           lastName: address.lastName,
           company: address.company,
           phone: address.phone,
-          subscriptionContractId: contractId,
         }),
       }
     );
