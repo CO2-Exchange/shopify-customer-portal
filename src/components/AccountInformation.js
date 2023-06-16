@@ -21,7 +21,6 @@ function AccountInformation({ subscriptionAddress, paymentMethod, contractId, fe
       body: JSON.stringify({ paymentMethodId: paymentMethod.id })
     });
     activateToast("Sent Update Email!")
-    fetchSubscription(contractId)
   }
   async function updateAddress(address){
     activateToast("Updated Address!")
