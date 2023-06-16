@@ -116,7 +116,7 @@ function Subscription(props) {
       <main class="gap-4 lg:gap-8 grid grid-cols-1 lg:grid-cols-12 p-4 lg:p-8">
         <nav class="col-span-full flex justify-between" aria-label="Breadcrumb">
           <ol class="inline-flex items-center space-x-1 md:space-x-3">
-            <select class="border border-gray-300 text-gray-900 text-sm rounded-r-lg border-l-gray-100 dark:border-l-gray-700 border-l-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" name="provinceCode" onChange={navigateToSubscription}>
+            <select class="border border-gray-300 text-gray-900 text-sm rounded-l-lg rounded-r-lg border-l-gray-100 dark:border-l-gray-700 border-l-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" name="provinceCode" onChange={navigateToSubscription}>
               {props.contracts.map(contract => {
                 return (
                   <option key={contract.id} value={contract.id.substring(contract.id.lastIndexOf('/') + 1)}>
