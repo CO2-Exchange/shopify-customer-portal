@@ -24,9 +24,9 @@ function ExchangeHistory({ orders }) {
             <td class='p-4 text-sm font-semibold text-gray-900 whitespace-nowrap'>
               {formatter.format(order.originalTotalPriceSet.shopMoney.amount)}
             </td>
-            <td class='p-4 whitespace-nowrap rounded-r-lg'>
+            <td class='p-4 whitespace-nowrap'>
               <span class='text-xs font-medium mr-2 px-2.5 py-0.5 text-blue-500 underline' >
-                <a href={`http://api.sodasense.com/orders/label/tracking/marketplace/${formatShopifyId(order.id)}/${formatShopifyId(order.lineItems.edges[0].node.id)}/pdf`}>Download</a>
+                <a href={`https://api.sodasense.com/orders/label/tracking/marketplace/${formatShopifyId(order.id)}/${formatShopifyId(order.lineItems.edges[0].node.id)}/pdf`}>Download</a>
               </span>
             </td>
             <td class='p-4 whitespace-nowrap rounded-r-lg'>
