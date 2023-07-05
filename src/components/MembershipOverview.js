@@ -43,7 +43,7 @@ function MembershipOverview({ address, product, price, image, sendReplacementBox
           </label>
           <input id="discount-code" type="text" class="bg-gray-50 rounded-md shadow-inner w-full" />
         </form>
-        <button onClick={() => sendReplacementBox()} class="border-2 border-blue-500 col-span-full md:col-span-2 p-2 rounded-md text-blue-500 place-self-center w-full">Send Me a Refill Box</button>
+        <button onClick={() => sendReplacementBox('box_action')} class="border-2 border-blue-500 col-span-full md:col-span-2 p-2 rounded-md text-blue-500 place-self-center w-full">Send Me a Refill Box</button>
       </div>
     </div>
   );

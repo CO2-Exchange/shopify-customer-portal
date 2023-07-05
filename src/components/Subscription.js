@@ -43,7 +43,7 @@ function Subscription(props) {
   function assignVariables(respJson) {
     console.log('assigning variables')
     console.log(JSON.stringify(respJson, undefined, 2))
-    var cleanedResponse = respJson.subscriptionContract.orders.edges;
+    var cleanedResponse = respJson.subscription.subscriptionContract.orders.edges;
     var filteredOrders = [];
     //map graphql response to cleaner array structure
     for (const order of cleanedResponse) {
@@ -51,19 +51,19 @@ function Subscription(props) {
     }
     setOrders(filteredOrders);
     //Set subscription product amount to the most recent orders price
-    setProductAmount(respJson.subscriptionContract.lines.edges[0].node.currentPrice.amount);
+    setProductAmount(respJson.subscription.subscriptionContract.lines.edges[0].node.currentPrice.amount);
     //Set subscription product amount to the most recent orders first product
-    setSubscriptionProduct(respJson.subscriptionContract.lines.edges[0].node.title);
+    setSubscriptionProduct(respJson.subscription.subscriptionContract.lines.edges[0].node.title);
 
-    if (respJson.subscriptionContract.lines.edges[0].node.variantImage.url) setVariantImage(respJson.subscriptionContract.lines.edges[0].node.variantImage.url);
+    if (respJson.subscription.subscriptionContract.lines.edges[0].node.variantImage.url) setVariantImage(respJson.subscription.subscriptionContract.lines.edges[0].node.variantImage.url);
 
-    if (respJson.subscriptionContract.deliveryMethod){
-      setSubscriptionAddress(respJson.subscriptionContract.deliveryMethod.address);
+    if (respJson.subscription.subscriptionContract.deliveryMethod){
+      setSubscriptionAddress(respJson.subscription.subscriptionContract.deliveryMethod.address);
     }
     else{
       setSubscriptionAddress(null);
     }
-    setPaymentMethod(respJson.subscriptionContract.customerPaymentMethod);
+    setPaymentMethod(respJson.subscription.subscriptionContract.customerPaymentMethod);
     setLoading(false);
   }
   async function updateSubscriptionStatus(){
@@ -99,15 +99,15 @@ function Subscription(props) {
     assignVariables(respJson);
     props.fetchContracts();
   }
-  async function sendReplacementBox(){
-    var resp = await fetch(`/apps/fillstation/api/v1/subscription/${contractId}/action/clit9khuz0000pb0wnl8wlea6`, {
+
+  async function sendAction(actionCode){
+    var resp = await fetch(`/apps/fillstation/api/v1/subscription/${contractId}/action/${actionCode}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ subscriptionContractId: contractId, code: 'replacement-box' })
+      body: JSON.stringify({ subscriptionContractId: contractId, code: actionCode })
     });
-    
   }
 
   function SubscriptionPage() {
@@ -129,7 +129,7 @@ function Subscription(props) {
         </nav>
 
         <div class="grid grid-cols-12 items-start lg:block lg:col-span-8 lg:space-y-8 space-y-4">
-          <MembershipOverview address={subscriptionAddress} product={subscriptionProduct} price={subscriptionProductAmount} image={variantImage} sendReplacementBox={sendReplacementBox}></MembershipOverview>
+          <MembershipOverview address={subscriptionAddress} product={subscriptionProduct} price={subscriptionProductAmount} image={variantImage} sendReplacementBox={sendAction}></MembershipOverview>
           <ExchangeHistory orders={orders}></ExchangeHistory>
         </div>
         <AccountInformation fetchSubscription={fetchSubscription} subscriptionAddress={subscriptionAddress} paymentMethod={paymentMethod} contractId={contractId}></AccountInformation>
