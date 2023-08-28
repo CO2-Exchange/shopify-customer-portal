@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import AccountInformation from './AccountInformation.js';
-import ExchangeHistory from './ExchangeHistory.js';
-import MembershipOverview from './MembershipOverview.js';
+import AccountInformation from '../components/AccountInformation.js';
+import ExchangeHistory from '../components/ExchangeHistory.js';
+import MembershipOverview from '../components/MembershipOverview.js';
 import { useNavigate } from 'react-router-dom';
 import contractsDetailsMockJson from '../mock-json/subscription-details.json';
+import SubscriptionSelect from '../components/SubscriptionSelect.js';
 
 // Component housing the subscriptions view
 // Responsible for fetching contract details
@@ -41,8 +42,6 @@ function Subscription(props) {
     fetchSubscription(e.target.value);
   }
   function assignVariables(respJson) {
-    console.log('assigning variables')
-    console.log(JSON.stringify(respJson, undefined, 2))
     var cleanedResponse = respJson.subscription.subscriptionContract.orders.edges;
     var filteredOrders = [];
     //map graphql response to cleaner array structure
@@ -55,7 +54,7 @@ function Subscription(props) {
     //Set subscription product amount to the most recent orders first product
     setSubscriptionProduct(respJson.subscription.subscriptionContract.lines.edges[0].node.title);
 
-    if (respJson.subscription.subscriptionContract.lines.edges[0].node.variantImage.url) setVariantImage(respJson.subscription.subscriptionContract.lines.edges[0].node.variantImage.url);
+    if (respJson.subscription.subscriptionContract.lines.edges[0].node?.variantImage?.url) setVariantImage(respJson.subscription.subscriptionContract.lines.edges[0].node.variantImage.url);
 
     if (respJson.subscription.subscriptionContract.deliveryMethod){
       setSubscriptionAddress(respJson.subscription.subscriptionContract.deliveryMethod.address);
@@ -114,19 +113,7 @@ function Subscription(props) {
     if (loading) return <h1>loading</h1>;
     return (
       <main class="gap-4 lg:gap-8 grid grid-cols-1 lg:grid-cols-12 p-4 lg:p-8">
-        <nav class="col-span-full flex justify-between" aria-label="Breadcrumb">
-          <ol class="inline-flex items-center space-x-1 md:space-x-3">
-            <select class="border border-gray-300 text-gray-900 text-sm rounded-l-lg rounded-r-lg border-l-gray-100 dark:border-l-gray-700 border-l-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" name="provinceCode" onChange={navigateToSubscription}>
-              {props.contracts.map(contract => {
-                return (
-                  <option key={contract.id} value={contract.id.substring(contract.id.lastIndexOf('/') + 1)}>
-                    {contract.deliveryMethod?.address?.address1} {contract.lines.edges[0].node.title}
-                  </option>
-                );
-              })}
-            </select>
-          </ol>
-        </nav>
+        <SubscriptionSelect contracts={props.contracts} navigateToSubscription={navigateToSubscription}></SubscriptionSelect>
 
         <div class="grid grid-cols-12 items-start lg:block lg:col-span-8 lg:space-y-8 space-y-4">
           <MembershipOverview address={subscriptionAddress} product={subscriptionProduct} price={subscriptionProductAmount} image={variantImage} sendReplacementBox={sendAction}></MembershipOverview>
