@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import Subscription from './components/Subscription.js';
+import Subscription from './pages/Subscription.js';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import mockContracts from './mock-json/subscriptions.json';
 
