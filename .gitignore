@@ -1,9 +1,15 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Package manager
+.yarn/cache
+.yarn/install-state.gz
+.npm
 
 # dependencies
 /node_modules
 /.pnp
 .pnp.js
+
+# Environment Configuration
+.direnv
 
 # testing
 /coverage
