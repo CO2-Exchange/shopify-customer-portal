@@ -109,6 +109,29 @@ function Subscription(props) {
     });
   }
 
+  async function applyDiscountCode(discountCode) {
+    try {
+      const response = await fetch(`/apps/fillstation/api/v1/subscription/${contractId}/apply-discount`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ subscriptionContractId: contractId, discountCode: discountCode })
+      });
+  
+      if (!response.ok) {
+        throw new Error('Error', response.status);
+      }
+  
+      const data = await response.json();
+      return data;
+  
+    } catch (error) {
+      console.error(error.message);
+      return null;
+    }
+  }  
+
   function SubscriptionPage() {
     if (loading) return <h1>loading</h1>;
     return (
@@ -116,7 +139,7 @@ function Subscription(props) {
         <SubscriptionSelect contracts={props.contracts} navigateToSubscription={navigateToSubscription}></SubscriptionSelect>
 
         <div class="grid grid-cols-12 items-start lg:block lg:col-span-8 lg:space-y-8 space-y-4">
-          <MembershipOverview address={subscriptionAddress} product={subscriptionProduct} price={subscriptionProductAmount} image={variantImage} sendReplacementBox={sendAction}></MembershipOverview>
+          <MembershipOverview address={subscriptionAddress} product={subscriptionProduct} price={subscriptionProductAmount} image={variantImage} sendReplacementBox={sendAction} applyDiscountCode={applyDiscountCode} ></MembershipOverview>
           <ExchangeHistory orders={orders}></ExchangeHistory>
         </div>
         <AccountInformation fetchSubscription={fetchSubscription} subscriptionAddress={subscriptionAddress} paymentMethod={paymentMethod} contractId={contractId}></AccountInformation>
