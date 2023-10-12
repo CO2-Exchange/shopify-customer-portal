@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-
-
+import { byCountry } from '../data/provinces.js';
+import { countries } from '../data/countries.js';
 
 // Modal with a form to update a subscription contract address
 
@@ -10,16 +10,29 @@ function UpdateAddressModal({
   updateAddress
 }) {
   const [address, setAddress] = useState({});
+  const [filteredProvinces, setProvinces] = useState([]);
 
   useEffect(() => {
     setAddress(subscriptionAddress);
+    setProvinces(byCountry(subscriptionAddress.countryCode));
   }, []);
 
   function onAddressChange(e){
-    setAddress((address) => ({
-      ...address,
-      [e.target.name]: e.target.value
-    }));
+    if (e.target.name === 'countryCode' && e.target.value !== address.countryCode) {
+      setProvinces(byCountry(e.target.value));
+      setAddress((address) => ({
+        ...address,
+        [e.target.name]: e.target.value,
+        provinceCode: ''
+      }));
+    }
+    else {
+      setAddress((address) => ({
+        ...address,
+        [e.target.name]: e.target.value
+      }));
+    }
+    
   }
 
   return (
@@ -27,6 +40,7 @@ function UpdateAddressModal({
       id='addressModal'
       tabindex='-1'
       aria-hidden='true'
+      style={{background: '#00000099'}}
       class='fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full px-4'
     >
       <div class='relative w-full h-full max-w-2xl md:h-auto  mx-auto'>
@@ -83,7 +97,7 @@ function UpdateAddressModal({
               />
             </label>
             <label class='block mb-6'>
-              <span class='text-gray-700'>Last Nmae</span>
+              <span class='text-gray-700'>Last Name</span>
               <input
                 name='lastName'
                 type='text'
@@ -174,58 +188,28 @@ function UpdateAddressModal({
             <label class='block mb-6'>
               <span class='text-gray-700'>State/Province</span>
               <select class='border border-gray-300 text-gray-900 text-sm rounded-r-lg border-l-gray-100 dark:border-l-gray-700 border-l-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5' name="provinceCode" value={address.provinceCode} onChange={onAddressChange}>
-                <option value='AL'>Alabama</option>
-                <option value='AK'>Alaska</option>
-                <option value='AZ'>Arizona</option>
-                <option value='AR'>Arkansas</option>
-                <option value='CA'>California</option>
-                <option value='CO'>Colorado</option>
-                <option value='CT'>Connecticut</option>
-                <option value='DE'>Delaware</option>
-                <option value='FL'>Florida</option>
-                <option value='GA'>Georgia</option>
-                <option value='HI'>Hawaii</option>
-                <option value='ID'>Idaho</option>
-                <option value='IL'>Illinois</option>
-                <option value='IN'>Indiana</option>
-                <option value='IA'>Iowa</option>
-                <option value='KS'>Kansas</option>
-                <option value='KY'>Kentucky</option>
-                <option value='LA'>Louisiana</option>
-                <option value='ME'>Maine</option>
-                <option value='MD'>Maryland</option>
-                <option value='MA'>Massachusetts</option>
-                <option value='MI'>Michigan</option>
-                <option value='MN'>Minnesota</option>
-                <option value='MS'>Mississippi</option>
-                <option value='MO'>Missouri</option>
-                <option value='MT'>Montana</option>
-                <option value='NE'>Nebraska</option>
-                <option value='NV'>Nevada</option>
-                <option value='NH'>New Hampshire</option>
-                <option value='NJ'>New Jersey</option>
-                <option value='NM'>New Mexico</option>
-                <option value='NY'>New York</option>
-                <option value='NC'>North Carolina</option>
-                <option value='ND'>North Dakota</option>
-                <option value='OH'>Ohio</option>
-                <option value='OK'>Oklahoma</option>
-                <option value='OR'>Oregon</option>
-                <option value='PA'>Pennsylvania</option>
-                <option value='RI'>Rhode Island</option>
-                <option value='SC'>South Carolina</option>
-                <option value='SD'>South Dakota</option>
-                <option value='TN'>Tennessee</option>
-                <option value='TX'>Texas</option>
-                <option value='UT'>Utah</option>
-                <option value='VT'>Vermont</option>
-                <option value='VA'>Virginia</option>
-                <option value='WA'>Washington</option>
-                <option value='WV'>West Virginia</option>
-                <option value='WI'>Wisconsin</option>
-                <option value='WY'>Wyoming</option>
+                <option hidden value=''></option>
+                {
+                  filteredProvinces.map((province) => (
+                    <option value={province.short}>{province.name}</option>
+                  ))
+                }
               </select>
             </label>
+            {
+              countries.length > 1 ? 
+              <label class='block mb-6'>
+                <span class='text-gray-700'>Country</span>
+                <select class='border border-gray-300 text-gray-900 text-sm rounded-r-lg border-l-gray-100 dark:border-l-gray-700 border-l-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5' name="countryCode" value={address.countryCode} onChange={onAddressChange}>
+                  {
+                    countries.map((country) => (
+                      <option value={country.short}>{country.name}</option>
+                    ))
+                  }
+                </select>
+              </label> 
+              : <></>
+            }
             <label class='block mb-6'>
               <span class='text-gray-700'>Zip/Postal code</span>
               <input
