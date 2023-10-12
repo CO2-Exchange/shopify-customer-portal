@@ -9,34 +9,12 @@ const formatter = new Intl.NumberFormat('en-US', {
   currency: 'USD'
 });
 
-function Toast({ message, type }) {
-  const toastStyles = {
-    success: 'bg-[#DEFAE8]',
-    error: 'bg-[#FCE8F3]',
-    info: 'bg-[#FDF6B2]'
-  };
-
-  return (
-    <div id="alert-1" className={`${toastStyles[type]} flex items-center mb-4 px-2.5 py-2 rounded-lg text-blue-800`} role="alert">
-      <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-      </svg>
-      <span class="sr-only">Info</span>
-      <div class="ml-3 text-sm font-medium">
-        {message}
-      </div>
-    </div>
-  );
-}
-
-function MembershipOverview({ address, product, price, image, sendReplacementBox, applyDiscountCode }) {
+function MembershipOverview({ address, product, price, image, sendAction, showToast, applyDiscountCode }) {
   const [discountCode, setDiscountCode] = useState('');
 
   function handleInputChange(event) {
     setDiscountCode(event.target.value);
   }
-
-  const [toast, setToast] = useState({ message: '', type: '', visible: false });
 
   const RESPONSE_MESSAGES = {
     CURRENTLY_INACTIVE: 'Discount is inactive.',
@@ -54,41 +32,41 @@ function MembershipOverview({ address, product, price, image, sendReplacementBox
 
   async function handleDiscountApply() {
     const appliedDiscount = await applyDiscountCode(discountCode);
-    console.log(appliedDiscount);
 
     if (appliedDiscount?.subscriptionDraftDiscountCodeApply?.appliedDiscount?.rejectionReason) {
       const rejectionReason = appliedDiscount.subscriptionDraftDiscountCodeApply.appliedDiscount.rejectionReason;
 
       if (rejectionReason) {
-        setToast({
-          message: RESPONSE_MESSAGES[rejectionReason] || 'Unknown error',
-          type: 'error',
-          visible: true
-        });
+        showToast(RESPONSE_MESSAGES[rejectionReason] || 'Unknown error', 'error');
       } else {
-        setToast({
-          message: 'Discount applied successfully!',
-          type: 'success',
-          visible: true
-        });
+        showToast('Discount applied successfully!', 'success');
       }
-    } else if (appliedDiscount.body.data.subscriptionDraftCommit) {
-      setToast({
-        message: 'Discount applied successfully!',
-        type: 'success',
-        visible: true
-      });
+    } else if (appliedDiscount.subscriptionDraftCommit) {
+      showToast('Discount applied successfully!', 'success');
     } else {
-      setToast({
-        message: 'Failed to apply discount. Please try again.',
-        type: 'error',
-        visible: true
-      });
+      showToast('Failed to apply discount. Please try again.', 'error');
     }
+  }
 
-    setTimeout(() => {
-      setToast(prevToast => ({ ...prevToast, visible: false }));
-    }, 3000);
+  async function handleAction(actionCode) {
+    const actionNames = {
+      'send_replacement_label': 'replacement label',
+      'box_action': 'refill box'
+    };
+
+    const action = actionNames[actionCode] || 'Unknown action';
+
+    try {
+      const response = await sendAction(actionCode);
+
+      if (response.accepted) {
+        showToast(`Your ${action} is on its way!`, 'success');
+      } else {
+        showToast(`We're having issues sending you a ${action}. Please try again later.`, 'error');
+      }
+    } catch (error) {
+      showToast(`An error occurred while processing your request. Please try again later.`, 'error');
+    }
   }
 
   useEffect(() => {
@@ -116,7 +94,9 @@ function MembershipOverview({ address, product, price, image, sendReplacementBox
           </div>
         </div>
 
-        <div class="hidden md:!block md:col-span-2"><div></div></div>
+        <div class="hidden md:!block md:col-span-2">
+        {/* <button onClick={() => handleAction('send_replacement_label')} class="border-2 border-blue-500 md:col-span-2 p-2 rounded-md text-blue-500 place-self-center w-full">Send Me a Replacement Label</button> */}
+        </div>
 
         <form class="md:col-span-2">
           <label for="discount-code" class="text-gray-500 text-sm">
@@ -128,10 +108,8 @@ function MembershipOverview({ address, product, price, image, sendReplacementBox
           </div>
         </form>
 
-        <button onClick={() => sendReplacementBox('box_action')} class="border-2 border-blue-500 md:col-span-2 p-2 rounded-md text-blue-500 place-self-center w-full">Send Me a Refill Box</button>
+        <button onClick={() => handleAction('box_action')} class="border-2 border-blue-500 md:col-span-2 p-2 rounded-md text-blue-500 place-self-center w-full">Send Me a Refill Box</button>
       </div>
-
-      {toast.visible && <Toast message={toast.message} type={toast.type} />}
     </div>
   );
 }
