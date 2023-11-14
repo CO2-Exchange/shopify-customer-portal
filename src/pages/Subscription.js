@@ -44,7 +44,7 @@ function Subscription(props) {
     fetchSubscription(e.target.value);
   }
   function assignVariables(respJson) {
-    var cleanedResponse = respJson.subscription.subscriptionContract.orders.edges;
+    var cleanedResponse = respJson.subscription.subscriptionContract?.orders?.edges;
     var filteredOrders = [];
     //map graphql response to cleaner array structure
     for (const order of cleanedResponse) {

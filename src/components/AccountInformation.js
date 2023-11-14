@@ -63,7 +63,7 @@ function AccountInformation({ subscriptionAddress, paymentMethod, contractId, fe
     <div class=' lg:block lg:col-span-4'>
       <div class='bg-white lg:col-span-4 p-4 rounded-lg shadow'>
         <div class='mb-4'>
-          <h3 class='text-gray-900 text-xl'>Account Information</h3>
+          <h3 class='text-xl font-bold text-gray-900'>Account Information</h3>
         </div>
 
         <div class='divide-y'>

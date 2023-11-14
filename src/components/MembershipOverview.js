@@ -62,7 +62,7 @@ function MembershipOverview({ address, product, price, image, sendAction, showTo
       if (response.accepted) {
         showToast(`Your ${action} is on its way!`, 'success');
       } else {
-        showToast(`We're having issues sending you a ${action}. Please try again later.`, 'error');
+        showToast(`${response.message}`, 'error');
       }
     } catch (error) {
       showToast(`An error occurred while processing your request. Please try again later.`, 'error');
@@ -78,7 +78,7 @@ function MembershipOverview({ address, product, price, image, sendAction, showTo
         <h3 class="text-xl font-bold text-gray-900">Membership Overview</h3>
       </div>
       <div class="mb-4">
-        {address?.address1} {address?.address2}, {address?.city} {address?.provinceCode}, {address?.zip}
+        {address?.address1}{address?.address2 ? ` ${address?.address2}`: ""}, {address?.city} {address?.provinceCode}, {address?.zip}
       </div>
       <div class="gap-8 grid md:grid-cols-5 md:grid-flow-col">
         {image ? <img src={image} class="md:col-span-1 md:row-span-2" /> : <></>}
@@ -94,8 +94,8 @@ function MembershipOverview({ address, product, price, image, sendAction, showTo
           </div>
         </div>
 
-        <div class="hidden md:!block md:col-span-2">
-        {/* <button onClick={() => handleAction('send_replacement_label')} class="border-2 border-blue-500 md:col-span-2 p-2 rounded-md text-blue-500 place-self-center w-full">Send Me a Replacement Label</button> */}
+        <div class="md:col-span-2">
+        <button onClick={() => handleAction('send_replacement_label')} class="border-2 border-blue-500 md:col-span-2 p-2 rounded-md text-blue-500 place-self-center w-full">Send Me a Replacement Label</button>
         </div>
 
         <form class="md:col-span-2">
@@ -107,7 +107,7 @@ function MembershipOverview({ address, product, price, image, sendAction, showTo
             <button onClick={() => handleDiscountApply()} type="button" class="text-white absolute right-2.5 bottom-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-normal rounded-lg text-base px-6 py-2">Apply</button>
           </div>
         </form>
-
+        
         <button onClick={() => handleAction('box_action')} class="border-2 border-blue-500 md:col-span-2 p-2 rounded-md text-blue-500 place-self-center w-full">Send Me a Refill Box</button>
       </div>
     </div>
