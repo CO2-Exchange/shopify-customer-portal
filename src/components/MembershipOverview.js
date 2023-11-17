@@ -9,10 +9,10 @@ const formatter = new Intl.NumberFormat('en-US', {
   currency: 'USD'
 });
 
-function MembershipOverview({ address, product, price, image, sendAction, showToast, applyDiscountCode }) {
+function MembershipOverview ({ address, product, price, image, sendAction, showToast, applyDiscountCode }) {
   const [discountCode, setDiscountCode] = useState('');
 
-  function handleInputChange(event) {
+  function handleInputChange (event) {
     setDiscountCode(event.target.value);
   }
 
@@ -30,7 +30,7 @@ function MembershipOverview({ address, product, price, image, sendAction, showTo
     USAGE_LIMIT_REACHED: 'Discount usage limit has been reached.'
   };
 
-  async function handleDiscountApply() {
+  async function handleDiscountApply () {
     const appliedDiscount = await applyDiscountCode(discountCode);
 
     if (appliedDiscount?.subscriptionDraftDiscountCodeApply?.appliedDiscount?.rejectionReason) {
@@ -48,7 +48,7 @@ function MembershipOverview({ address, product, price, image, sendAction, showTo
     }
   }
 
-  async function handleAction(actionCode) {
+  async function handleAction (actionCode) {
     const actionNames = {
       'send_replacement_label': 'replacement label',
       'box_action': 'refill box'
@@ -62,7 +62,7 @@ function MembershipOverview({ address, product, price, image, sendAction, showTo
       if (response.accepted) {
         showToast(`Your ${action} is on its way!`, 'success');
       } else {
-        showToast(`We're having issues sending you a ${action}. Please try again later.`, 'error');
+        showToast(`${response.message}`, 'error');
       }
     } catch (error) {
       showToast(`An error occurred while processing your request. Please try again later.`, 'error');
@@ -73,33 +73,33 @@ function MembershipOverview({ address, product, price, image, sendAction, showTo
 
   }, [address]);
   return (
-    <div class="bg-white col-span-full lg:col-span-8 order-1 p-4 rounded-lg shadow">
+    <div class="bg-white col-span-full order-1 p-4 rounded-lg shadow">
       <div class="mb-4">
         <h3 class="text-xl font-bold text-gray-900">Membership Overview</h3>
       </div>
       <div class="mb-4">
-        {address?.address1} {address?.address2}, {address?.city} {address?.provinceCode}, {address?.zip}
+        {address?.address1}{address?.address2 ? ` ${address?.address2}` : ""}, {address?.city} {address?.provinceCode}, {address?.zip}
       </div>
-      <div class="gap-8 grid md:grid-cols-5 md:grid-flow-col">
-        {image ? <img src={image} class="md:col-span-1 md:row-span-2" /> : <></>}
+      <div class="gap-8 grid tablet-md:grid-cols-5 tablet-md:grid-flow-col">
+        {image ? <img src={image} class="order-1 tablet-md:order-1 tablet-md:col-span-1 tablet-md:row-span-2 tablet-md:max-h-40" /> : <></>}
 
-        <div class="flex flex-wrap justify-between lg:col-span-2 md:col-span-2">
+        <div class="order-2 tablet-md:order-2 flex flex-wrap justify-between laptop:col-span-2 tablet-md:col-span-2">
           <div class="">
-            <div class="text-gray-500">Product</div>
+            <div class="text-blue-760">Product</div>
             <div class="font-bold text-blue-500">{product}</div>
           </div>
           <div class="">
-            <div class="text-gray-500">Total</div>
+            <div class="text-blue-760">Total</div>
             <div>{formatter.format(price)}</div>
           </div>
         </div>
 
-        <div class="hidden md:!block md:col-span-2">
-        {/* <button onClick={() => handleAction('send_replacement_label')} class="border-2 border-blue-500 md:col-span-2 p-2 rounded-md text-blue-500 place-self-center w-full">Send Me a Replacement Label</button> */}
+        <div class="order-4 tablet-md:order-3 tablet-md:col-span-2">
+          <button onClick={() => handleAction('send_replacement_label')} class="border-2 border-blue-500 tablet-md:col-span-2 p-2 rounded-md text-blue-500 place-self-center w-full">Send Me a Replacement Label</button>
         </div>
 
-        <form class="md:col-span-2">
-          <label for="discount-code" class="text-gray-500 text-sm">
+        <form class="order-3 tablet-md:order-4 tablet-md:col-span-2">
+          <label for="discount-code" class="text-blue-760 text-sm">
             Apply Discount Code To Your Next Refill
           </label>
           <div class="relative">
@@ -108,7 +108,9 @@ function MembershipOverview({ address, product, price, image, sendAction, showTo
           </div>
         </form>
 
-        <button onClick={() => handleAction('box_action')} class="border-2 border-blue-500 md:col-span-2 p-2 rounded-md text-blue-500 place-self-center w-full">Send Me a Refill Box</button>
+        <div class="order-5 tablet-md:order-5 tablet-md:col-span-2">
+          <button onClick={() => handleAction('box_action')} class="border-2 border-blue-500 tablet-md:col-span-2 p-2 rounded-md text-blue-500 place-self-center w-full">Send Me a Refill Box</button>
+        </div>
       </div>
     </div>
   );

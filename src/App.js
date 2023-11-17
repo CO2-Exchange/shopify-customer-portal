@@ -54,7 +54,7 @@ function App() {
 
   return (
     <>
-      <div class="sm:container mx-auto">
+      <div class="container">
         <Routes>
           <Route
             path={pathPrefix + "subscription/:id"}
