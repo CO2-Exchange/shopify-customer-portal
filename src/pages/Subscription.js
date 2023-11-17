@@ -152,10 +152,10 @@ function Subscription(props) {
   function SubscriptionPage() {
     if (loading) return <h1>loading</h1>;
     return (
-      <main class="gap-4 lg:gap-8 grid grid-cols-1 lg:grid-cols-12 p-4 lg:p-8">
+      <main class="gap-4 laptop:gap-8 grid grid-cols-1 laptop:grid-cols-12 p-4 laptop:p-8">
         <SubscriptionSelect contracts={props.contracts} navigateToSubscription={navigateToSubscription}></SubscriptionSelect>
 
-        <div class="grid grid-cols-12 items-start lg:block lg:col-span-8 lg:space-y-8 space-y-4">
+        <div class="grid grid-cols-12 items-start laptop:block laptop:col-span-8 laptop:space-y-8 space-y-4">
           <MembershipOverview address={subscriptionAddress} product={subscriptionProduct} price={subscriptionProductAmount} image={variantImage} sendAction={sendAction} showToast={showToast} applyDiscountCode={applyDiscountCode} ></MembershipOverview>
           {toast.visible && <Toast message={toast.message} type={toast.type} />}
           <ExchangeHistory orders={orders}></ExchangeHistory>
