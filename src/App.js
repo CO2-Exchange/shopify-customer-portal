@@ -3,6 +3,7 @@ import './App.css';
 import Subscription from './pages/Subscription.js';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import mockContracts from './mock-json/subscriptions.json';
+import fetchWrapper from './utils/fetchWrapper.js';
 
 //process.env.REACT_APP_PRODUCTION_MODE ? window.location.pathname+'/' : ''
 const devMode = process.env.NODE_ENV === 'development';
@@ -40,7 +41,7 @@ function App() {
     }
   }
   async function fetchContracts() {
-    var resp = await fetch("/apps/fillstation/api/v1/customer/subscriptions", {
+    var resp = await fetchWrapper("/apps/fillstation/api/v1/customer/subscriptions", {
       method: "GET",
       mode: "no-cors",
       headers: {
