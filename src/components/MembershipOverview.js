@@ -10,7 +10,7 @@ const formatter = new Intl.NumberFormat('en-US', {
   currency: 'USD'
 });
 
-function MembershipOverview({address, product, price, image, sendAction, showToast, applyDiscountCode}) {
+function MembershipOverview ({ discounts, address, product, price, image, sendAction, showToast, applyDiscountCode }) {
   const [discountCode, setDiscountCode] = useState('');
 
   function handleInputChange(event) {
@@ -61,9 +61,19 @@ function MembershipOverview({address, product, price, image, sendAction, showToa
       const response = await sendAction(actionCode);
 
       if (response.accepted) {
-        showToast(`Your ${action} is on its way!`, 'success');
+        if (actionCode === 'send_replacement_label') {
+          showToast(`Check your email for your pre-paid shipping label. Please allow for 1-2 minutes for delivery.`, 'success');
+        }
+        if (actionCode === 'box_action') {
+          showToast('Your replacement box is on the way!', 'success');
+        }
       } else {
-        showToast(`${response.message}`, 'error');
+        if (actionCode === 'send_replacement_label') {
+          showToast(`Your pre-paid shipping label has already been emailed. If you don't see it within 5 minutes please reach out to customer support.`, 'error');
+        }
+        if (actionCode === 'box_action') {
+          showToast('Your replacement box is already on the way. If you need another box, please contact customer support', 'error');
+        }
       }
     } catch (error) {
       showToast(`An error occurred while processing your request. Please try again later.`, 'error');
@@ -120,6 +130,13 @@ function MembershipOverview({address, product, price, image, sendAction, showToa
           <div class="relative">
             <input value={discountCode} onChange={handleInputChange} type="text" id="discount-code" class="block h-14 w-full px-2.5 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Discount Code" required />
             <button onClick={() => handleDiscountApply()} type="button" class="text-white absolute right-2.5 bottom-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-normal rounded-lg text-base px-6 py-2">Apply</button>
+          </div>
+          <div style={{paddingTop: '10px'}}>
+            {
+              discounts.filter(disc => disc.node.usageCount < disc.node.recurringCycleLimit).map(disc => (
+                <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">{disc.node.title}</span>)
+              )
+            }
           </div>
         </form>
 

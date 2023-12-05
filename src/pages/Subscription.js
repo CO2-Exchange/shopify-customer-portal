@@ -13,7 +13,7 @@ import fetchWrapper from '../utils/fetchWrapper.js';
 // Navigation between contracts
 const devMode = process.env.NODE_ENV === 'development';
 
-function Subscription(props) {
+function Subscription (props) {
   const [orders, setOrders] = useState(null);
   const [subscriptionAddress, setSubscriptionAddress] = useState({});
   const [paymentMethod, setPaymentMethod] = useState({});
@@ -22,6 +22,7 @@ function Subscription(props) {
   const [variantImage, setVariantImage] = useState('');
   const [subscriptionProductAmount, setProductAmount] = useState(null);
   const [subscriptionStatus, setSubscriptionStatus] = useState('ACTIVE');
+  const [discounts, setDiscounts] = useState(null);
   const [contractId, setContractId] = useState(0);
   const [toast, setToast] = useState({ message: '', type: '', visible: false });
 
@@ -36,15 +37,16 @@ function Subscription(props) {
     setContractId(subId)
     if (devMode) assignVariables(contractsDetailsMockJson);
     else {
+      setLoading(true);
       fetchSubscription(subId);
     }
   }, []);
 
-  function navigateToSubscription(e) {
+  function navigateToSubscription (e) {
     navigator(pathPrefix + e.target.value);
     fetchSubscription(e.target.value);
   }
-  function assignVariables(respJson) {
+  function assignVariables (respJson) {
     var cleanedResponse = respJson.subscription.subscriptionContract?.orders?.edges;
     var filteredOrders = [];
     //map graphql response to cleaner array structure
@@ -57,6 +59,9 @@ function Subscription(props) {
     //Set subscription product amount to the most recent orders first product
     setSubscriptionProduct(respJson.subscription.subscriptionContract.lines.edges[0].node.title);
 
+    //Set Discounts for display in membership overview
+    setDiscounts(respJson.subscription.subscriptionContract.discounts.edges);
+
     if (respJson.subscription.subscriptionContract.lines.edges[0].node?.variantImage?.url) setVariantImage(respJson.subscription.subscriptionContract.lines.edges[0].node.variantImage.url);
 
     if (respJson.subscription.subscriptionContract.deliveryMethod) {
@@ -68,13 +73,13 @@ function Subscription(props) {
     setPaymentMethod(respJson.subscription.subscriptionContract.customerPaymentMethod);
     setLoading(false);
   }
-  function showToast(message, type) {
+  function showToast (message, type) {
     setToast({ message, type, visible: true });
     setTimeout(() => {
       setToast(prevToast => ({ ...prevToast, visible: false }));
     }, 3000);
   }
-  async function updateSubscriptionStatus() {
+  async function updateSubscriptionStatus () {
     let newStatus = subscriptionStatus;
     if (subscriptionStatus === 'ACTIVE') {
       newStatus = 'CANCELLED';
@@ -107,7 +112,7 @@ function Subscription(props) {
     assignVariables(respJson);
     props.fetchContracts();
   }
-  async function sendAction(actionCode) {
+  async function sendAction (actionCode) {
     try {
       const resp = await fetchWrapper(`/apps/fillstation/api/v1/subscription/${contractId}/action/${actionCode}`, {
         method: 'POST',
@@ -127,7 +132,7 @@ function Subscription(props) {
       throw error;
     }
   }
-  async function applyDiscountCode(discountCode) {
+  async function applyDiscountCode (discountCode) {
     try {
       const response = await fetchWrapper(`/apps/fillstation/api/v1/subscription/${contractId}/apply-discount`, {
         method: 'POST',
@@ -140,24 +145,24 @@ function Subscription(props) {
       if (!response.ok) {
         throw new Error(`Failed to apply discount code. Status: ${response.status} - ${response.statusText}`);
       }
-
+      await fetchSubscription(contractId);
       const data = await response.json();
       return data;
 
     } catch (error) {
       console.error("Error applying discount code:", error);
-        return { success: false, error: error.message };
+      return { success: false, error: error.message };
     }
   }
 
-  function SubscriptionPage() {
+  function SubscriptionPage () {
     if (loading) return <h1>loading</h1>;
     return (
       <main class="gap-4 laptop:gap-8 grid grid-cols-1 laptop:grid-cols-12 p-4 laptop:p-8">
-        <SubscriptionSelect contracts={props.contracts} navigateToSubscription={navigateToSubscription}></SubscriptionSelect>
-
+        <SubscriptionSelect selectedContract={contractId} customerTags={props.customer?.tags} contracts={props.contracts} navigateToSubscription={navigateToSubscription}></SubscriptionSelect>
+        
         <div class="grid grid-cols-12 items-start laptop:block laptop:col-span-8 laptop:space-y-8 space-y-4">
-          <MembershipOverview address={subscriptionAddress} product={subscriptionProduct} price={subscriptionProductAmount} image={variantImage} sendAction={sendAction} showToast={showToast} applyDiscountCode={applyDiscountCode} ></MembershipOverview>
+          <MembershipOverview discounts={discounts} address={subscriptionAddress} product={subscriptionProduct} price={subscriptionProductAmount} image={variantImage} sendAction={sendAction} showToast={showToast} applyDiscountCode={applyDiscountCode} ></MembershipOverview>
           {toast.visible && <Toast message={toast.message} type={toast.type} />}
           <ExchangeHistory orders={orders}></ExchangeHistory>
         </div>

@@ -90,14 +90,19 @@ function AccountInformation({ subscriptionAddress, paymentMethod, contractId, fe
               <button onClick={()=> {updatePaymentMethod()}} class='text-blue-500 underline'>Edit</button>
             </div>
             <div class='flex items-center space-x-4'>
-              <div>
-                <div class='font-medium'>
-                  {paymentMethod.instrument.brand} {paymentMethod.instrument.maskedNumber}
-                </div>
-                <div class='font-light'>
-                  Expires {paymentMethod.instrument.expiryMonth}/{paymentMethod.instrument.expiryYear}
-                </div>
-              </div>
+              {
+                paymentMethod?.instrument?.maskedNumber ? 
+                (<div>
+                  <div class='font-medium'>
+                    {paymentMethod?.instrument?.brand} {paymentMethod?.instrument?.maskedNumber}
+                  </div>
+                  <div class='font-light'>
+                    Expires {paymentMethod?.instrument?.expiryMonth}/{paymentMethod?.instrument?.expiryYear}
+                  </div>
+                </div>) 
+                :
+                <>Pay-Pal Billing Agreement</>
+              }
             </div>
           </div>
 
@@ -107,8 +112,14 @@ function AccountInformation({ subscriptionAddress, paymentMethod, contractId, fe
               <button onClick={()=> {updatePaymentMethod()}} class='text-blue-500 underline'>Edit</button>
             </div>
             <div class='font-medium'>
-              {paymentMethod?.instrument?.billingAddress?.firstName}{' '}
-              {paymentMethod?.instrument?.billingAddress?.lastName}
+              {
+                paymentMethod?.instrument?.billingAddress?.firstName ? 
+                (<>
+                  {paymentMethod?.instrument?.billingAddress?.firstName}{' '}
+                  {paymentMethod?.instrument?.billingAddress?.lastName}
+                </>) :
+                <>{paymentMethod?.instrument?.billingAddress?.name}</>
+              }
               <br />
               {paymentMethod?.instrument?.billingAddress?.address1}
               <br />
