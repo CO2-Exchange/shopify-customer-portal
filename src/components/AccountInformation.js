@@ -1,6 +1,7 @@
 import UpdateToast from "./UpdateToast.js";
 import { useEffect, useState } from "react";
 import UpdateAddressModal from "./UpdateAddressModal.js";
+import fetchWrapper from "../utils/fetchWrapper.js";
 
 
 // Component for managing user account informatino
@@ -13,7 +14,7 @@ function AccountInformation({ subscriptionAddress, paymentMethod, contractId, fe
   const [addressModalOpen, setAddressModalOpen] = useState(false);
 
   async function updatePaymentMethod() {
-    var resp = await fetch(`/apps/fillstation/api/v1/subscription/${contractId}/update-payment`, {
+    var resp = await fetchWrapper(`/apps/fillstation/api/v1/subscription/${contractId}/update-payment`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -25,7 +26,7 @@ function AccountInformation({ subscriptionAddress, paymentMethod, contractId, fe
   async function updateAddress(address){
     activateToast("Updated Address!")
     setAddressModalOpen(false)
-    var resp = await fetch(
+    var resp = await fetchWrapper(
       `/apps/fillstation/api/v1/subscription/${contractId}/update-address`,
       {
         method: 'POST',

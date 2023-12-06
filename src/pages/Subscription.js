@@ -6,6 +6,7 @@ import Toast from '../components/Toast.js';
 import { useNavigate } from 'react-router-dom';
 import contractsDetailsMockJson from '../mock-json/subscription-details.json';
 import SubscriptionSelect from '../components/SubscriptionSelect.js';
+import fetchWrapper from '../utils/fetchWrapper.js';
 
 // Component housing the subscriptions view
 // Responsible for fetching contract details
@@ -88,7 +89,7 @@ function Subscription (props) {
       newStatus = 'ACTIVE';
       setSubscriptionStatus('ACTIVE')
     }
-    var resp = await fetch(`/apps/fillstation/api/v1/subscription/update-status`, {
+    var resp = await fetchWrapper(`/apps/fillstation/api/v1/subscription/update-status`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -99,8 +100,9 @@ function Subscription (props) {
     assignVariables(respJson);
     fetchSubscription(contractId);
   }
-  async function fetchSubscription (id) {
-    var resp = await fetch(`/apps/fillstation/api/v1/customer/subscription/${id}`, {
+  async function fetchSubscription(id) {
+    setLoading(true);
+    var resp = await fetchWrapper(`/apps/fillstation/api/v1/customer/subscription/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -112,7 +114,7 @@ function Subscription (props) {
   }
   async function sendAction (actionCode) {
     try {
-      const resp = await fetch(`/apps/fillstation/api/v1/subscription/${contractId}/action/${actionCode}`, {
+      const resp = await fetchWrapper(`/apps/fillstation/api/v1/subscription/${contractId}/action/${actionCode}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -132,7 +134,7 @@ function Subscription (props) {
   }
   async function applyDiscountCode (discountCode) {
     try {
-      const response = await fetch(`/apps/fillstation/api/v1/subscription/${contractId}/apply-discount`, {
+      const response = await fetchWrapper(`/apps/fillstation/api/v1/subscription/${contractId}/apply-discount`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -2,7 +2,8 @@
 // Also houses actions for requesting replacement label and replacement box
 // Will be used to supply discounts (if/when supported)
 
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
+import fetchWrapper from "../utils/fetchWrapper.js";
 
 const formatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -12,7 +13,7 @@ const formatter = new Intl.NumberFormat('en-US', {
 function MembershipOverview ({ discounts, address, product, price, image, sendAction, showToast, applyDiscountCode }) {
   const [discountCode, setDiscountCode] = useState('');
 
-  function handleInputChange (event) {
+  function handleInputChange(event) {
     setDiscountCode(event.target.value);
   }
 
@@ -30,7 +31,7 @@ function MembershipOverview ({ discounts, address, product, price, image, sendAc
     USAGE_LIMIT_REACHED: 'Discount usage limit has been reached.'
   };
 
-  async function handleDiscountApply () {
+  async function handleDiscountApply() {
     const appliedDiscount = await applyDiscountCode(discountCode);
 
     if (appliedDiscount?.subscriptionDraftDiscountCodeApply?.appliedDiscount?.rejectionReason) {
@@ -48,7 +49,7 @@ function MembershipOverview ({ discounts, address, product, price, image, sendAc
     }
   }
 
-  async function handleAction (actionCode) {
+  async function handleAction(actionCode) {
     const actionNames = {
       'send_replacement_label': 'replacement label',
       'box_action': 'refill box'
@@ -106,6 +107,20 @@ function MembershipOverview ({ discounts, address, product, price, image, sendAc
 
         <div class="order-4 tablet-md:order-3 tablet-md:col-span-2">
           <button onClick={() => handleAction('send_replacement_label')} class="border-2 border-blue-500 tablet-md:col-span-2 p-2 rounded-md text-blue-500 place-self-center w-full">Send Me a Replacement Label</button>
+          {/* <button onClick={async () => {
+            const res = await fetchWrapper('/apps/fillstation/api/v1/graph', {
+              body: JSON.stringify({
+                query: `query ExampleQuery {
+              hello
+            }`}),
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+              },
+            })
+            const json = await res.json()
+            console.log(json)
+          }}>Hit API</button> */}
         </div>
 
         <form class="order-3 tablet-md:order-4 tablet-md:col-span-2">
